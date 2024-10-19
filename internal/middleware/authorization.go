@@ -4,34 +4,40 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/eliot6001/goapi/api"
+	"github.com/Eliot6001/goApi/internal/tools"
+	"github.com/Eliot6001/goApi/api"
 	log "github.com/sirupsen/logrus"
 )
 
-var UnAuthorizedError = errors.New("Invalid username or token.");
+var UnAuthorizedError = errors.New("Invalid username or token.")
 
 func Authorization(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)){
-		var username string = r.URL.Query().Get("Author")
-		var token = r.Header.Get("Authorization");
-		var err error;
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		username := r.URL.Query().Get("Username") //request needs to have Username not username
+		token := r.Header.Get("Authorization")
+
 		if username == "" || token == "" {
-		 log.Error(UnAuthorizedError);
-		 api.RequestErrorHandler(w, UnAuthorizedError)
-		 return
-		}
-		var database *tools.DatabaseInterface
-		database, err = tools.NewDatabase();
-		if err != nil {
-			api.InternalErrorHandler(w);
+			log.Error(UnAuthorizedError)
+			api.RequestErrorHandler(w, UnAuthorizedError)
 			return
 		}
-		var loginDetails *tools.LoginDetails;
-		if(loginDetails == nil || (token != (*loginDetails).AuthToken)){
-			log.Error(UnAuthorizedError)
-			api.RequestErrorHandler(w, UnAuthorizedError);
-			return;
+
+		database, err := tools.NewDatabase()
+		if err != nil {
+			api.InternalErrorHandler(w)
+			return
 		}
-		next.ServeHTTP(w, r);
-	}
-} 
+
+		var loginDetails *tools.LoginDetails
+		loginDetails = (*database).GetUserLoginDetails(username)
+
+		if err != nil || loginDetails == nil || loginDetails.AuthToken != token {
+			log.Error(UnAuthorizedError)
+			api.RequestErrorHandler(w, UnAuthorizedError)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}

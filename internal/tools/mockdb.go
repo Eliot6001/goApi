@@ -2,46 +2,47 @@ package tools
 
 import (
 	"time"
+	"fmt"
 )
 
 type mockDB struct{}
 
 var mockLoginDetails = map[string]LoginDetails{
 	"james": {
-		username: "james",
-		AuthToken: "aa_AA_bb_BB"
+		Username: "james",
+		AuthToken: "aa_AA_bb_BB",
 	},
 	"jason": {
-		username: "jason",
-		AuthToken: "bb_BB_cc_CC"
+		Username: "jason",
+		AuthToken: "bb_BB_cc_CC",
 	},
 	"jack": {
-		username: "jack",
-		AuthToken: "bb_BB_cc_DD"
+		Username: "jack",
+		AuthToken: "bb_BB_cc_DD",
 	},
 }
 
-var mockAuthorDetails = map[string]ArticleDetails{
+var mockAuthorDetails = map[string]AuthorDetails{
 	"nietzsche": {
 		Author: "nietzsche",
-		NumberOfArticles: 10 
+		NumberOfArticles: 10, 
 	},
 	"freud": {
 		Author: "freud",
-		NumberOfArticles: 11 
+		NumberOfArticles: 11, 
 	},
 	"fyodor": {
 		Author: "fyodor",
-		NumberOfArticles: 30 
+		NumberOfArticles: 30, 
 	},
 }
 
-func (d *mockDB) GetUserLoginDetails(username string) *LoginDetails {
+func (d *mockDB) GetUserLoginDetails(Username string) *LoginDetails {
 	// Simulate DB call
 	time.Sleep(time.Second * 1)
 
 	var clientData = LoginDetails{}
-	clientData, ok := mockLoginDetails[username]
+	clientData, ok := mockLoginDetails[Username]
 	if !ok {
 		return nil
 	}
@@ -49,11 +50,11 @@ func (d *mockDB) GetUserLoginDetails(username string) *LoginDetails {
 	return &clientData
 }
 
-func (d *mockDB) GetAuthorArticles(username string) *AuthorDetails {
+func (d *mockDB) GetAuthorArticles(Author string) *AuthorDetails {
 	// Simulate DB call
 	time.Sleep(time.Second * 1)
-
-	var clientData = ArticleDetails{}
+  fmt.Println(Author)
+	var clientData = AuthorDetails{}
 	clientData, ok := mockAuthorDetails[Author]
 	if !ok {
 		return nil

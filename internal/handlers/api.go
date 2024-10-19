@@ -2,14 +2,15 @@ package handlers
 
 
 import (
+	"github.com/Eliot6001/goApi/internal/middleware"
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 )
 
 
 func Handler(r *chi.Mux){
-	r.use(chimiddle.StripSlashes);
-	r.Route("/articles", func(router chil.Router){
+	r.Use(chimiddle.StripSlashes)//removes the last slash; 
+	r.Route("/articles", func(router chi.Router){
 		router.Use(middleware.Authorization);
 		router.Get("/author", GetNumberOfArticles)
 	})

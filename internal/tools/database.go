@@ -10,14 +10,14 @@ type LoginDetails struct {
 	Username string
 }
 
-type ArticleDetails struct {
+type AuthorDetails struct {
 	NumberOfArticles int64  
 	Author string 
 }
 
 type DatabaseInterface interface {
-	GetUserLoginDetails(username string) *LoginDetails
-	GetAuthorArticles(username string) *AuthorDetails
+	GetUserLoginDetails(Username string) *LoginDetails
+	GetAuthorArticles(Author string) *AuthorDetails
 	SetupDatabase() error 
  }
 	
